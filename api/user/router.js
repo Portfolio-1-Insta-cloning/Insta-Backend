@@ -2,10 +2,11 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Users = require("./model");
+const {restricted} = require("./middleware")
 
 const router = express.Router();
 
-router.get("/users", async (req, res, next) => {
+router.get("/", restricted(), async (req, res, next) => {
     try {
         res.json(await Users.getUsers());
     } catch (err) {
@@ -61,7 +62,7 @@ router.post("/login", async (req, res, next) => {
         console.log("password", user);
         const passwordValid = await bcrypt.compare(password, user.password)
 
-        if (!password) {
+        if (!passwordValid) {
             return res.status(401).json({
                 message: "Invalid password"
             })
@@ -73,7 +74,8 @@ router.post("/login", async (req, res, next) => {
         }, process.env.JWT_SECRET)
         res.cookie("token", token);
         res.json({
-            message: `Welcome, ${user.username}`
+            message: `Welcome, ${user.username}`,
+            token: token,
         })
         
     } catch (err) {
