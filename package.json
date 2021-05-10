@@ -25,8 +25,15 @@
     "nodemon": "^2.0.7"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "generate-gitignore": "^0.2.6",
     "gitignore": "^0.6.0",
-    "helmet": "^4.6.0"
+    "helmet": "^4.6.0",
+    "knex": "^0.95.4",
+    "node-pre-gyp": "^0.17.0",
+    "sqlite3": "^5.0.2"
   }
 }
