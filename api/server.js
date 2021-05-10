@@ -18,6 +18,19 @@ server.get("/", async (req, res, next) => {
     } catch (err) {
         next(err);
     }
+});
+
+server.use("/api/users", userRouter);
+
+server.use((err, req, res, next) => {
+    console.log(err);
+    try {
+        res.status(500).json({
+            message: "something went wrong"
+        })
+    } catch (err) {
+        next(err);
+    }
 })
 
 module.exports = server;

@@ -1,19 +1,17 @@
 const db = require("../../data/dbConfig");
 
-async function addUser(user) {
-    const [id] = await db("users").insert(user)
-    return findUserById(id);
+function addUser(user) {
+    return db("users").insert(user)
+        .returning("*");
 }
 
 function getUsers() {
     return db("users")
-        // .innerJoin("roles", "users.role_id", "roles.id")
         .select("users.id", "users.username as User")
 }
 
 function findUserById(id) {
     return db("users")
-        // .innerJoin("roles", "users.role_id", "roles.id")
         .where("users.id", id)
         .first("users.id", "users.username as User")
 }
@@ -21,8 +19,7 @@ function findUserById(id) {
 function findByUsername(username) {
     return db("users")
         .where("users.username", username)
-        // .innerJoin("roles", "users.role_id", "roles.id")
-        .select("users.id", "users.username", )
+        .select("users.id", "users.username", "users.password" )
 }
 
 module.exports = {
