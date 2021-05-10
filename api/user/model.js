@@ -7,21 +7,21 @@ async function addUser(user) {
 
 function getUsers() {
     return db("users")
-        .innerJoin("roles", "users.role_id", "roles.id")
-        .select("users.id", "users.username as User", "roles.role as Role")
+        // .innerJoin("roles", "users.role_id", "roles.id")
+        .select("users.id", "users.username as User")
 }
 
 function findUserById(id) {
     return db("users")
-        .innerJoin("roles", "users.role_id", "roles.id")
+        // .innerJoin("roles", "users.role_id", "roles.id")
         .where("users.id", id)
-        .first("users.id", "users.username as User", "roles.role as Role")
+        .first("users.id", "users.username as User")
 }
 
 function findByUsername(username) {
     return db("users")
         .where("users.username", username)
-        .innerJoin("roles", "users.role_id", "roles.id")
+        // .innerJoin("roles", "users.role_id", "roles.id")
         .select("users.id", "users.username", )
 }
 
