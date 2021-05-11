@@ -36,7 +36,7 @@ router.post("/signup", async (req, res, next) => {
             })
         }
 
-        const newUser = await user.addUser({
+        const newUser = await Users.addUser({
             username,
             password: await bcrypt.hash(password, 8)
         })
