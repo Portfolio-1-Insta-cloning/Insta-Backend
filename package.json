@@ -36,6 +36,8 @@
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.4",
+    "migrate": "^1.7.0",
+    "migrations": "^1.0.1",
     "node-pre-gyp": "^0.17.0",
     "sqlite3": "^5.0.2"
   }
