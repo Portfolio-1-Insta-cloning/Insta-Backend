@@ -1,4 +1,7 @@
 // knex migrate:make create_users => to create migration file.
+// knex migrate:latest => to update database
+// knex seed:make filename => to create the seed files.
+// knex seed:run => to seed the data.
 exports.up = async function(knex) {
     await knex.schema.createTable("users", (table) => {
         table.increments("id");
