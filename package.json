@@ -35,7 +35,7 @@
     "gitignore": "^0.6.0",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.95.4",
+    "knex": "^0.95.5",
     "node-pre-gyp": "^0.17.0",
     "pg": "^8.6.0",
     "sqlite3": "^5.0.2"
