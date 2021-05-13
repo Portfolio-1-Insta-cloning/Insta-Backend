@@ -17,12 +17,12 @@ module.exports = {
             host: "localhost",
             port: "5432",
             user: "postgres",
-            database: "users",
+            database: "instausers",
             password: process.env.DB_PASSWORD
         },
         migrations: { directory: "./data/migrations" },
         seeds: { directory: "./data/seeds" },
-        pool: { afterCreate: (conn, done) => { conn.run("PRAGMA foreign_keys = ON", done) } },
+        // pool: { afterCreate: (conn, done) => { conn.run("PRAGMA foreign_keys = ON", done) } },
     },
 
     testing: {

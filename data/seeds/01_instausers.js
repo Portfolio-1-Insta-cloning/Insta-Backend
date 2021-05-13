@@ -9,3 +9,6 @@ exports.seed = async function(knex) {
     { username: "Noah", password: hashedPassword},
   ])
 };
+
+
+
