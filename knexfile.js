@@ -14,10 +14,10 @@ module.exports = {
         client: "pg",
         useNullAsDefault: true,
         connection: {
-            host: "localhost",
+            host: "lallah.db.elephantsql.com",
             port: "5432",
-            user: "postgres",
-            database: "instausers",
+            user: "tkagaawl",
+            database: "tkagaawl",
             password: process.env.DB_PASSWORD
         },
         migrations: { directory: "./data/migrations" },

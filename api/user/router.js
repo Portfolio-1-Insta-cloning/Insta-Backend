@@ -6,7 +6,7 @@ const {restricted} = require("./middleware")
 
 const router = express.Router();
 
-router.get("/", restricted(), async (req, res, next) => {
+router.get("/", async (req, res, next) => {
     try {
         res.json(await Users.getUsers());
     } catch (err) {
@@ -17,7 +17,7 @@ router.get("/", restricted(), async (req, res, next) => {
 router.post("/signup", async (req, res, next) => {
     console.log("Request", req.body);
     try {
-        const { username, password } = req.body;
+        const { username, password, firstname, lastname } = req.body;
 
         const [user] = await Users.findByUsername(username);
         console.log("Newuser", user);
@@ -37,6 +37,8 @@ router.post("/signup", async (req, res, next) => {
         }
 
         const newUser = await Users.addUser({
+            firstname,
+            lastname,
             username,
             password: await bcrypt.hash(password, 8)
         })
@@ -55,7 +57,7 @@ router.post("/login", async (req, res, next) => {
 
         if (!user) {
             return res.status(401).json({
-                message: "Invalid User"
+                message: "Invalid Username"
             })
         }
 
@@ -74,12 +76,32 @@ router.post("/login", async (req, res, next) => {
         }, process.env.JWT_SECRET)
         res.cookie("token", token);
         res.json({
-            message: `Welcome, ${user.username}`,
+            firstname: `${user.firstname}`,
+            lastname:  `${user.lastname}`,
+            username: `${user.username}`,
             token: token,
         })
         
     } catch (err) {
         next(err);
+    }
+})
+
+router.get("/:id", restricted(), async (req, res, next) => {
+    console.log("user by id", res.body)
+    try {
+        const user = await Users.findUserById(req.params.id)
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            })
+        }
+        res.json({
+            firstname: `${user.firstname}`
+        });
+        console.log('User by id', user)
+    } catch (err) {
+        next(err)
     }
 })
 
