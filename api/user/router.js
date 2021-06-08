@@ -76,8 +76,9 @@ router.post("/login", async (req, res, next) => {
         }, process.env.JWT_SECRET)
         res.cookie("token", token);
         res.json({
+            id: `${user.id}`,
             firstname: `${user.firstname}`,
-            lastname:  `${user.lastname}`,
+            lastname: `${user.lastname}`,
             username: `${user.username}`,
             token: token,
         })
@@ -88,7 +89,6 @@ router.post("/login", async (req, res, next) => {
 })
 
 router.get("/:id", restricted(), async (req, res, next) => {
-    console.log("user by id", res.body)
     try {
         const user = await Users.findUserById(req.params.id)
         if (!user) {
@@ -97,11 +97,24 @@ router.get("/:id", restricted(), async (req, res, next) => {
             })
         }
         res.json({
-            firstname: `${user.firstname}`
+            firstname: user.firstname,
+            id: `${user.id}`
         });
         console.log('User by id', user)
     } catch (err) {
         next(err)
+    }
+})
+
+router.put("/:id", restricted(), async (req, res, next) => {
+    try {
+        const [id] = req.params.id;
+        const changes = req.body;
+        Users.findUserById(id);
+        const edited = Users.editUserProfile(changes, id)
+        res.json(edited);
+    } catch (err) {
+        next(err);
     }
 })
 
