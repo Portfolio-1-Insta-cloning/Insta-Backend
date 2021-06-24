@@ -90,16 +90,13 @@ router.post("/login", async (req, res, next) => {
 
 router.get("/:id", restricted(), async (req, res, next) => {
     try {
-        const user = await Users.findUserById(req.params.id)
+        const [user] = await Users.findUserById(req.params.id)
         if (!user) {
             return res.status(404).json({
                 message: "User not found",
             })
         }
-        res.json({
-            firstname: user.firstname,
-            id: `${user.id}`
-        });
+        res.json(user);
         console.log('User by id', user)
     } catch (err) {
         next(err)
@@ -107,15 +104,35 @@ router.get("/:id", restricted(), async (req, res, next) => {
 })
 
 router.put("/:id", restricted(), async (req, res, next) => {
+    const id = req.params.id;
+    console.log('REQ.PARAMS.ID =', req.params.id);
+    const changes = req.body;
+    console.log("PUT = ", req.body);
+    
+    // await Users.findUserById(id)
+    //     .then(() => {
+    //         if (id) {
+    //             const editedUser = Users.editUserProfile(changes, id);
+    //             console.log("editedUser", editedUser);
+    //             return changes;
+    //         } else {
+    //             res.status(404).json({ message: "Could not find user with given ID" });
+    //         }
+    //     })
+    //     .then(updateUser => {
+    //         res.json(updateUser);
+    //     })
+    //     .catch(err => {
+    //         res.status(500).json({ message: "Failed to update user" });
+    //     });
+
     try {
-        const [id] = req.params.id;
-        const changes = req.body;
-        Users.findUserById(id);
-        const edited = Users.editUserProfile(changes, id)
-        res.json(edited);
+        const updatedUser = await Users.editUserProfile(changes, id);
+        const user = await Users.findUserById(id);
+        res.json(user[0]);
     } catch (err) {
         next(err);
     }
-})
+});
 
 module.exports = router;

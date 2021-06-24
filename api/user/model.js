@@ -13,7 +13,7 @@ function getUsers() {
 function findUserById(id) {
     return db("instausers")
         .where("instausers.id", id)
-        .first("instausers.id", "instausers.username", "instausers.firstname", "instausers.lastname")
+        .select("instausers.id", "instausers.username", "instausers.firstname", "instausers.lastname")
 }
 
 function findByUsername(username) {
@@ -22,11 +22,10 @@ function findByUsername(username) {
         .select("instausers.id", "instausers.username", "instausers.password", "instausers.firstname as firstname", "instausers.lastname as lastname" )
 }
 
-async function editUserProfile(change, user_id) {
-    const [id] = await db("instausers")
-        .where("id", user_id)
+function editUserProfile(change, id) {
+    return db("instausers")
+        .where("id", id)
         .update(change)
-    return findUserById(id)
 }
 
 function removeUser(id) {
