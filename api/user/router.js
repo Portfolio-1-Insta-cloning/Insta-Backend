@@ -6,7 +6,7 @@ const {restricted} = require("./middleware")
 
 const router = express.Router();
 
-router.get("/", restricted(), async (req, res, next) => {
+router.get("/", async (req, res, next) => {
     try {
         res.json(await Users.getUsers());
     } catch (err) {
@@ -17,7 +17,7 @@ router.get("/", restricted(), async (req, res, next) => {
 router.post("/signup", async (req, res, next) => {
     console.log("Request", req.body);
     try {
-        const { username, password } = req.body;
+        const { username, password, firstname, lastname } = req.body;
 
         const [user] = await Users.findByUsername(username);
         console.log("Newuser", user);
@@ -37,6 +37,8 @@ router.post("/signup", async (req, res, next) => {
         }
 
         const newUser = await Users.addUser({
+            firstname,
+            lastname,
             username,
             password: await bcrypt.hash(password, 8)
         })
@@ -55,7 +57,7 @@ router.post("/login", async (req, res, next) => {
 
         if (!user) {
             return res.status(401).json({
-                message: "Invalid User"
+                message: "Invalid Username"
             })
         }
 
@@ -74,7 +76,10 @@ router.post("/login", async (req, res, next) => {
         }, process.env.JWT_SECRET)
         res.cookie("token", token);
         res.json({
-            message: `Welcome, ${user.username}`,
+            id: `${user.id}`,
+            firstname: `${user.firstname}`,
+            lastname: `${user.lastname}`,
+            username: `${user.username}`,
             token: token,
         })
         
@@ -82,5 +87,52 @@ router.post("/login", async (req, res, next) => {
         next(err);
     }
 })
+
+router.get("/:id", restricted(), async (req, res, next) => {
+    try {
+        const [user] = await Users.findUserById(req.params.id)
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            })
+        }
+        res.json(user);
+        console.log('User by id', user)
+    } catch (err) {
+        next(err)
+    }
+})
+
+router.put("/:id", restricted(), async (req, res, next) => {
+    const id = req.params.id;
+    console.log('REQ.PARAMS.ID =', req.params.id);
+    const changes = req.body;
+    console.log("PUT = ", req.body);
+    
+    // await Users.findUserById(id)
+    //     .then(() => {
+    //         if (id) {
+    //             const editedUser = Users.editUserProfile(changes, id);
+    //             console.log("editedUser", editedUser);
+    //             return changes;
+    //         } else {
+    //             res.status(404).json({ message: "Could not find user with given ID" });
+    //         }
+    //     })
+    //     .then(updateUser => {
+    //         res.json(updateUser);
+    //     })
+    //     .catch(err => {
+    //         res.status(500).json({ message: "Failed to update user" });
+    //     });
+
+    try {
+        const updatedUser = await Users.editUserProfile(changes, id);
+        const user = await Users.findUserById(id);
+        res.json(user[0]);
+    } catch (err) {
+        next(err);
+    }
+});
 
 module.exports = router;
