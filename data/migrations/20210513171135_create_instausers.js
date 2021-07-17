@@ -17,9 +17,29 @@ exports.up = async function(knex) {
         table.text("password").notNull();
         table.integer("role_id").notNull().defaultTo(1).references("id").inTable("roles").onDelete("RESTRICT")
     })
+
+    await knex.schema.createTable("courses", (table) => {
+        table.increments("id");
+        table.text("course_name").notNull();
+    })
+
+    await knex.schema.createTable("title_description", (table) => {
+        table.increments("id");
+        table.text("title").notNull();
+        table.text("description").notNull();
+    })
+
+    await knex.schema.createTable("course_details", (table) => {
+        table.integer("course_id").notNull().references("id").inTable("courses").onDelete("CASCADE");
+        table.integer("title_description_id").notNull().references("id").inTable("title_description").onDelete("CASCADE");
+        table.primary(["course_id", "title_description_id"])
+    })
 };
 
 exports.down = async function(knex) {
+    await knex.schema.dropTableIfExists("course_details");
+    await knex.schema.dropTableIfExists("title_description");
+    await knex.schema.dropTableIfExists("courses");
     await knex.schema.dropTableIfExists("instausers");
     await knex.schema.dropTableIfExists("roles");
 };

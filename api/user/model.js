@@ -13,13 +13,13 @@ function getUsers() {
 function findUserById(id) {
     return db("instausers")
         .where("instausers.id", id)
-        .select("instausers.id", "instausers.username", "instausers.firstname", "instausers.lastname")
+        .select("instausers.id", "instausers.username", "instausers.firstname", "instausers.lastname", "instausers.role_id")
 }
 
 function findByUsername(username) {
     return db("instausers")
         .where("instausers.username", username)
-        .select("instausers.id", "instausers.username", "instausers.password", "instausers.firstname as firstname", "instausers.lastname as lastname" )
+        .select("instausers.id", "instausers.username", "instausers.password", "instausers.firstname as firstname", "instausers.lastname as lastname", "instausers.role_id" )
 }
 
 function editUserProfile(change, id) {

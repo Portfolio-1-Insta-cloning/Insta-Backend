@@ -43,6 +43,7 @@ router.post("/signup", async (req, res, next) => {
             password: await bcrypt.hash(password, 8)
         })
         res.status(201).json(newUser)
+        console.log("New user",newUser)
 
     } catch (err) {
         next(err);
@@ -81,6 +82,7 @@ router.post("/login", async (req, res, next) => {
             lastname: `${user.lastname}`,
             username: `${user.username}`,
             token: token,
+            role_id: `${user.role_id}`
         })
         
     } catch (err) {
