@@ -3,6 +3,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 const userRouter = require("./user/router");
+const courses = require("./courses/courses_router");
 
 const server = express();
 
@@ -13,7 +14,7 @@ server.use(cors());
 server.get("/", async (req, res, next) => {
     try {
         res.status(200).json({
-            message: "Welcome to our friends group"
+            message: "Welcome to our Academy"
         })
     } catch (err) {
         next(err);
@@ -21,6 +22,7 @@ server.get("/", async (req, res, next) => {
 });
 
 server.use("/api/users", userRouter);
+server.use("/api/courses", courses)
 
 server.use((err, req, res, next) => {
     console.log(err);
