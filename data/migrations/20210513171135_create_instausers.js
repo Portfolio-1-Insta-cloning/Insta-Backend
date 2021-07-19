@@ -15,7 +15,7 @@ exports.up = async function(knex) {
         table.text("lastname").notNull();
         table.text("username").notNull().unique();
         table.text("password").notNull();
-        table.integer("role_id").notNull().defaultTo(1).references("id").inTable("roles").onDelete("RESTRICT")
+        table.integer("role_id").notNull().references("id").inTable("roles").onDelete("CASCADE")
     })
 
     await knex.schema.createTable("courses", (table) => {
