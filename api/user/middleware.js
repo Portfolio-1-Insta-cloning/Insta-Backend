@@ -5,7 +5,6 @@ function restricted() {
         const authError = {
             message: "Invalid credentials"
         }
-
         try {
             const token = req.headers.authorization;
             if (!token) {
@@ -24,4 +23,17 @@ function restricted() {
         }
     }
 }
-module.exports = {restricted}
+
+function adminAuth() {
+    return( req, res, next) => {
+        if(req.token.role_id !== 1) {
+            res.status(401).json({
+                message: "You are not authorized to access"
+            })
+        }
+
+        next();
+    }
+}
+
+module.exports = {restricted, adminAuth}

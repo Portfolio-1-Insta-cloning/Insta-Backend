@@ -7,7 +7,7 @@ function addUser(user) {
 
 function getUsers() {
     return db("instausers")
-        .select("instausers.id", "instausers.username as User", "instausers.firstname as firstname", "instausers.lastname as lastname")
+        .select("instausers.id", "instausers.username as User", "instausers.firstname as firstname", "instausers.lastname as lastname", "instausers.role_id")
 }
 
 function findUserById(id) {

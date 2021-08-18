@@ -2,12 +2,13 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Users = require("./model");
-const {restricted} = require("./middleware")
+const {restricted, adminAuth} = require("./middleware")
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
+router.get("/", restricted(), adminAuth(), async (req, res, next) => {
     try {
+        console.log("get request", req.token.username)
         res.json(await Users.getUsers());
     } catch (err) {
         next(err);
@@ -17,7 +18,7 @@ router.get("/", async (req, res, next) => {
 router.post("/signup", async (req, res, next) => {
     console.log("Request", req.body);
     try {
-        const { username, password, firstname, lastname } = req.body;
+        const { username, password, firstname, lastname, role_id } = req.body;
 
         const [user] = await Users.findByUsername(username);
         console.log("Newuser", user);
@@ -40,7 +41,8 @@ router.post("/signup", async (req, res, next) => {
             firstname,
             lastname,
             username,
-            password: await bcrypt.hash(password, 8)
+            password: await bcrypt.hash(password, 8),
+            role_id,
         })
         res.status(201).json(newUser)
         console.log("New user",newUser)
@@ -73,7 +75,8 @@ router.post("/login", async (req, res, next) => {
 
         const token = jwt.sign({
             userId: user.id,
-            username: username
+            username: username,
+            role_id: user.role_id,
         }, process.env.JWT_SECRET)
         res.cookie("token", token);
         res.json({
